@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/tilesets/valley.tres" type="TileSet" id=1]
 [ext_resource path="res://src/Objects/HookTarget.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/Objects/Portal.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/Objects/FallLimitArea.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/Objects/Checkpoint.tscn" type="PackedScene" id=5]
 
 [node name="Level" type="Node2D"]
 
@@ -111,7 +112,7 @@ gravity_point = true
 
 [node name="Checkpoints" type="Node" parent="."]
 
-[node name="0" type="Node2D" parent="Checkpoints"]
+[node name="0" parent="Checkpoints" instance=ExtResource( 5 )]
 position = Vector2( 300.591, 913.335 )
 
 [node name="Exit" parent="." instance=ExtResource( 3 )]
