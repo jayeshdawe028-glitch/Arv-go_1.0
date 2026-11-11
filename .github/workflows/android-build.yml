@@ -48,7 +48,7 @@ jobs:
           godot --export-debug "Android" build/GoAarviiGo.apk
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Android-Game-Debug
           path: build/GoAarviiGo.apk
