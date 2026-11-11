@@ -25,17 +25,24 @@ func trigger(NewLevel: PackedScene, portal_name: String = "") -> void:
 	_game.remove_child(_player)
 	_level = NewLevel.instance()
 
+	var checkpoints: Node = _level.get_node("Checkpoints")
+	var start_checkpoint: Area2D = checkpoints.get_child(0)
+	_player.last_checkpoint = start_checkpoint
+
 	var player_position_node: Node2D = (
-		_level.get_node("Checkpoints").get_child(0)
+		start_checkpoint
 		if portal_name.empty()
 		else _level.get_node("Portals/%s" % portal_name)
 	)
 	_player.global_position = player_position_node.global_position
 	_player.has_teleported = not portal_name.empty()
 
+	# Restore visited checkpoints and keep the most recently visited one
+	# as the respawn point when returning to a level.
 	for checkpoint_name in _game.visited_checkpoints.get(_level.name, []):
-		var checkpoint: Area2D = _level.get_node("Checkpoints/%s" % checkpoint_name)
+		var checkpoint: Area2D = checkpoints.get_node(checkpoint_name)
 		checkpoint.is_visited = true
+		_player.last_checkpoint = checkpoint
 
 	_game.level = _level
 	_game.add_child(_level)
