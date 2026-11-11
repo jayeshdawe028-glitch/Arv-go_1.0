@@ -1,0 +1,54 @@
+name: Android Build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Generate Debug Keystore
+        run: |
+          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Download Godot
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/3.5.3-stable/Godot_v3.5.3-stable_linux_headless.64.zip
+          unzip Godot_v3.5.3-stable_linux_headless.64.zip
+          chmod +x Godot_v3.5.3-stable_linux_headless.64
+          sudo mv Godot_v3.5.3-stable_linux_headless.64 /usr/local/bin/godot
+
+      - name: Download Godot Export Templates
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/3.5.3-stable/Godot_v3.5.3-stable_export_templates.tpz
+          mkdir -p ~/.local/share/godot/templates/3.5.3.stable
+          unzip Godot_v3.5.3-stable_export_templates.tpz -d temp
+          mv temp/templates/* ~/.local/share/godot/templates/3.5.3.stable/
+          rm -rf temp Godot_v3.5.3-stable_export_templates.tpz
+
+      - name: Build Android APK
+        run: |
+          mkdir -p build
+          godot --export-debug "Android" build/GoAarviiGo.apk
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Android-Game-Debug
+          path: build/GoAarviiGo.apk
