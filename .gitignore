@@ -1,0 +1,4 @@
+.import/
+*.zip
+*.log
+export_presets.cfg
