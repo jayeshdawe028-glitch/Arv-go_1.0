@@ -26,9 +26,10 @@ func trigger(NewLevel: PackedScene, portal_name: String = "") -> void:
 
 	if is_instance_valid(_level):
 		scene_tree.paused = true
-		if is_instance_valid(_game.transition):
-			_game.transition.fade_to_black()
-			yield(_game.transition, "faded_to_black")
+		var transition = _game.get_node_or_null("UI/Transition")
+		if is_instance_valid(transition):
+			transition.fade_to_black()
+			yield(transition, "faded_to_black")
 		_level.queue_free()
 		yield(_level, "tree_exited")
 

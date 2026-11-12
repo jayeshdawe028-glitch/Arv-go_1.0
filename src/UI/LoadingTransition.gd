@@ -13,6 +13,10 @@ func fade_to_black() -> void:
 
 func fade_back_in() -> void:
 	animation_player.clear_queue()
+	# The first level has no fade_to_black phase, so explicitly reveal the
+	# opaque overlay before playing the fade-out animation.
+	visible = true
+	modulate = Color(1, 1, 1, 1)
 	animation_player.play("fade_out")
 
 
